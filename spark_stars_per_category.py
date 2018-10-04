@@ -1,3 +1,12 @@
+##########################################################
+## compute the number of businesses, total review count ##
+## and number of 4-star or higher reviews for each      ##
+## neighborhood in each city                            ##
+##########################################################
+
+## if a business has multiple neighborhoods, its review count and stars should be attributed to all of the neighborhoods 
+## if the neighborhoods list is empty, then use 'Unknown' as the name of the neighborhood
+
 import json
 from pyspark import SparkConf, SparkContext
 
