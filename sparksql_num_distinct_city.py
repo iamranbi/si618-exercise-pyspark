@@ -1,3 +1,8 @@
+######################################
+## find out the distribution of     ##
+## the number of distinct cities    ##
+## that Yelp users wrote reviews in ##
+######################################
 import json
 import os
 from pyspark import SparkContext
@@ -16,7 +21,7 @@ r1 = sqlContext.sql('select business_id as b_id, user_id, stars from reviewt')
 r1.registerTempTable('r2')
 b1 = sqlContext.sql('select business_id, city from businesst')
 b1.registerTempTable('b2')
-#join
+#join datasets
 rb1 = sqlContext.sql('select * from r2 join b2 on b_id = business_id')
 rb1.registerTempTable('rb11')
 rb2all = sqlContext.sql('select user_id, city from rb11 order by user_id')
@@ -34,6 +39,7 @@ rb4all = sqlContext.sql('select user_id, count(*) as cities from rb31all group b
 rb4pos = sqlContext.sql('select user_id, count(*) as cities from rb31pos group by user_id order by cities desc')
 rb4neg = sqlContext.sql('select user_id, count(*) as cities from rb31neg group by user_id order by cities desc')
 
+#use the histogram() function to calculate the breakdown
 cities_histogram_all = rb4all.select('cities').rdd.flatMap(lambda x: x).histogram(30)
 cities_histogram_pos = rb4pos.select('cities').rdd.flatMap(lambda x: x).histogram(24)
 cities_histogram_neg = rb4neg.select('cities').rdd.flatMap(lambda x: x).histogram(15)
